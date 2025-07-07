@@ -21,8 +21,8 @@ const Navigation = () => {
     { name: 'Rooms', href: '#rooms' },
     { name: 'Dining', href: '#dining' },
     { name: 'Events', href: '#events' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Gallery', href: '/gallery' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -54,15 +54,27 @@ const Navigation = () => {
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className={`font-medium transition-colors hover:text-gold-500 ${
-                  isScrolled ? 'text-navy-700' : 'text-white'
-                }`}
-              >
-                {item.name}
-              </a>
+              item.href.startsWith('#') ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className={`font-medium transition-colors hover:text-gold-500 ${
+                    isScrolled ? 'text-navy-700' : 'text-white'
+                  }`}
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`font-medium transition-colors hover:text-gold-500 ${
+                    isScrolled ? 'text-navy-700' : 'text-white'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
             <Button className="bg-gold-500 hover:bg-gold-600 text-white px-6">
               Book Now
@@ -87,14 +99,25 @@ const Navigation = () => {
           <div className="lg:hidden bg-white border-t border-gray-200">
             <div className="py-4 space-y-4">
               {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block px-4 py-2 text-navy-700 hover:text-gold-500 font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
+                item.href.startsWith('#') ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="block px-4 py-2 text-navy-700 hover:text-gold-500 font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="block px-4 py-2 text-navy-700 hover:text-gold-500 font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               <div className="px-4">
                 <Button className="w-full bg-gold-500 hover:bg-gold-600 text-white">

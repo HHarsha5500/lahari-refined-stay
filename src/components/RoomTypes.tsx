@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,8 +9,8 @@ const RoomTypes = () => {
       id: 1,
       name: 'Single Room',
       image: '/lovable-uploads/4e4742d0-f32b-4031-99ed-01c48bf9a73e.png',
-      price: '₹3,500',
-      originalPrice: '₹4,200',
+      price: '₹2,000',
+      originalPrice: '₹2,400',
       rating: 4.8,
       guests: '1 Guest',
       features: ['Free Wi-Fi', 'AC', 'TV', 'Room Service'],
@@ -21,8 +20,8 @@ const RoomTypes = () => {
       id: 2,
       name: 'Luxury Room',
       image: '/lovable-uploads/440f2aae-df63-4a72-8504-f9f3d70a4a95.png',
-      price: '₹6,800',
-      originalPrice: '₹8,500',
+      price: '₹2,500',
+      originalPrice: '₹3,000',
       rating: 4.9,
       guests: '2 Guests',
       features: ['Free Wi-Fi', 'Premium AC', 'Smart TV', 'Mini Bar', 'Balcony'],
@@ -32,8 +31,8 @@ const RoomTypes = () => {
       id: 3,
       name: 'Executive Suite',
       image: '/lovable-uploads/8864f4e5-1a14-4957-97ce-55d69c203abb.png',
-      price: '₹12,000',
-      originalPrice: '₹15,000',
+      price: '₹3,500',
+      originalPrice: '₹4,200',
       rating: 5.0,
       guests: '4 Guests',
       features: ['Free Wi-Fi', 'Living Area', 'Kitchenette', 'Premium Bath', 'Concierge'],
