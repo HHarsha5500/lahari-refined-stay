@@ -1,28 +1,21 @@
-
 import React from 'react';
 import { Phone, MapPin, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 const Footer = () => {
-  return (
-    <footer className="bg-navy-800 text-white">
+  return <footer className="bg-navy-800 text-white">
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Hotel Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <img 
-                src="/lovable-uploads/045bfd91-ee7f-44de-a642-f20bb4e9958e.png" 
-                alt="Hotel Lahari International" 
-                className="h-12 w-auto"
-              />
+              
               <div>
                 <h3 className="text-xl font-bold">Hotel Lahari International</h3>
-                <p className="text-gold-400">A Premium Stay in the Heart of the City</p>
+                <p className="text-gold-400">Extent Your Happiness</p>
               </div>
             </div>
             
-            <p className="text-gray-300 mb-6 max-w-md">
+            <p className="text-gray-300 mb-6 max-w-md mx-0 px-[12px]">
               Experience luxury and comfort at Hotel Lahari International. Where elegance meets exceptional service for an unforgettable stay.
             </p>
           </div>
@@ -95,8 +88,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
