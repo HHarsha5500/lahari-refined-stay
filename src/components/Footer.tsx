@@ -15,7 +15,7 @@ const Footer = () => {
               </div>
             </div>
             
-            <p className="text-gray-300 mb-6 max-w-md mx-0 px-0">
+            <p className="text-gray-300 mb-6 max-w-md px-0 font-normal mx-[13px]">
               Experience luxury and comfort at Hotel Lahari International. Where elegance meets exceptional service for an unforgettable stay.
             </p>
           </div>
