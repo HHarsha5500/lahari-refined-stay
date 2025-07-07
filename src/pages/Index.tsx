@@ -6,6 +6,7 @@ import RoomTypes from '@/components/RoomTypes';
 import DiningSection from '@/components/DiningSection';
 import EventsSection from '@/components/EventsSection';
 import BookingSection from '@/components/BookingSection';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
       <DiningSection />
       <EventsSection />
       <BookingSection />
+      <Footer />
     </div>
   );
 };
