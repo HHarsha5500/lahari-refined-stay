@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,7 +32,11 @@ const Navigation = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <Link 
+            to="/" 
+            aria-label="Go to homepage"
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <img 
               src="/lovable-uploads/045bfd91-ee7f-44de-a642-f20bb4e9958e.png" 
               alt="Hotel Lahari International" 
@@ -44,7 +49,7 @@ const Navigation = () => {
                 Hotel Lahari International
               </h2>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
