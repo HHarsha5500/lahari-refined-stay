@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,36 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Hotel brand colors
+				gold: {
+					50: '#fefdf8',
+					100: '#fef9e7',
+					200: '#fef0c7',
+					300: '#fde68a',
+					400: '#fcd34d',
+					500: '#D4AF37',
+					600: '#d69e2e',
+					700: '#b7791f',
+					800: '#975a16',
+					900: '#744210'
+				},
+				navy: {
+					50: '#f0f4f8',
+					100: '#d9e8f5',
+					200: '#b3d1eb',
+					300: '#7fb3d3',
+					400: '#5a9bd4',
+					500: '#2563eb',
+					600: '#1e40af',
+					700: '#1e3a8a',
+					800: '#001F3F',
+					900: '#0f1729'
 				}
+			},
+			fontFamily: {
+				'serif': ['Playfair Display', 'serif'],
+				'sans': ['Inter', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +114,33 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(20px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'slide-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateX(-20px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateX(0)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.6s ease-out',
+				'slide-in': 'slide-in 0.6s ease-out'
 			}
 		}
 	},
