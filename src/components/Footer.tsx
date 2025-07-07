@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Hotel Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6 px-[12px]">
+            <div className="flex items-center space-x-3 mb-6 px-0">
               
               <div>
                 <h3 className="text-xl font-bold">Hotel Lahari International</h3>
@@ -15,7 +15,7 @@ const Footer = () => {
               </div>
             </div>
             
-            <p className="text-gray-300 mb-6 max-w-md mx-0 px-[12px]">
+            <p className="text-gray-300 mb-6 max-w-md mx-0 px-0">
               Experience luxury and comfort at Hotel Lahari International. Where elegance meets exceptional service for an unforgettable stay.
             </p>
           </div>
