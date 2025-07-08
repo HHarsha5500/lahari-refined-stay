@@ -9,12 +9,12 @@ const Gallery = () => {
 
   const galleryImages = [
     {
-      src: '/lovable-uploads/9e7edf6b-3424-4c0a-bb7b-e8a4eb347f7b.png',
+      src: '/lovable-uploads/c13863d9-65c8-4dac-a7d3-fd023eeaaa29.png',
       alt: 'Hotel Exterior View',
       category: 'Exterior'
     },
     {
-      src: '/lovable-uploads/c13863d9-65c8-4dac-a7d3-fd023eeaaa29.png',
+      src: '/lovable-uploads/9e7edf6b-3424-4c0a-bb7b-e8a4eb347f7b.png',
       alt: 'Hotel Lobby',
       category: 'Interior'
     },
@@ -24,12 +24,12 @@ const Gallery = () => {
       category: 'Rooms'
     },
     {
-      src: '/lovable-uploads/90e4e1ba-4090-4502-ba8c-0664b36019ae.png',
+      src: '/lovable-uploads/fd8f7b52-534f-48c9-840e-4220535bd93f.png',
       alt: 'Hotel Restaurant',
       category: 'Dining'
     },
     {
-      src: '/lovable-uploads/fd8f7b52-534f-48c9-840e-4220535bd93f.png',
+      src: '/lovable-uploads/90e4e1ba-4090-4502-ba8c-0664b36019ae.png',
       alt: 'Conference Hall',
       category: 'Events'
     },
@@ -64,8 +64,8 @@ const Gallery = () => {
       {/* Hero Section */}
       <section className="bg-navy-800 text-white py-20 mt-20">
         <div className="container-custom text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Gallery</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">Gallery</h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto animate-slide-in">
             Explore the elegance and luxury of Hotel Lahari International through our photo gallery
           </p>
         </div>
@@ -74,12 +74,12 @@ const Gallery = () => {
       {/* Filter Buttons */}
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-4 mb-12 animate-fade-in">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-6 py-3 rounded-full font-medium transition-all ${
+                className={`px-6 py-3 rounded-full font-medium transition-all transform hover:scale-105 ${
                   activeCategory === category
                     ? 'bg-gold-500 text-white shadow-lg'
                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -95,7 +95,8 @@ const Gallery = () => {
             {filteredImages.map((image, index) => (
               <div
                 key={index}
-                className="group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                className="group cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-scale-in"
+                style={{ animationDelay: `${index * 100}ms` }}
                 onClick={() => setSelectedImage(image.src)}
               >
                 <div className="relative">
