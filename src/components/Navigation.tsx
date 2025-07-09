@@ -1,12 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,9 +78,30 @@ const Navigation = () => {
                 </Link>
               )
             ))}
-            <Button className="bg-gold-500 hover:bg-gold-600 text-white px-6">
-              Book Now
-            </Button>
+            
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className={`text-sm ${isScrolled ? 'text-navy-700' : 'text-white'}`}>
+                  Welcome, {user.email}
+                </span>
+                <Button 
+                  onClick={signOut}
+                  variant="outline"
+                  size="sm"
+                  className="border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-white"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Link to="/auth">
+                <Button className="bg-gold-500 hover:bg-gold-600 text-white px-6">
+                  <User className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -119,10 +142,29 @@ const Navigation = () => {
                   </Link>
                 )
               ))}
-              <div className="px-4">
-                <Button className="w-full bg-gold-500 hover:bg-gold-600 text-white">
-                  Book Now
-                </Button>
+              <div className="px-4 space-y-2">
+                {user ? (
+                  <>
+                    <div className="text-sm text-navy-700 mb-2">
+                      Welcome, {user.email}
+                    </div>
+                    <Button 
+                      onClick={signOut}
+                      variant="outline"
+                      className="w-full border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-white"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button className="w-full bg-gold-500 hover:bg-gold-600 text-white">
+                      <User className="w-4 h-4 mr-2" />
+                      Sign In
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
