@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Hotel, User, Mail, Lock, Phone } from 'lucide-react';
+import { Eye, EyeOff, Hotel, User, Mail, Lock, ArrowLeft } from 'lucide-react';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -100,6 +100,17 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gold-50 via-background to-navy-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back Navigation */}
+        <div className="mb-6">
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
