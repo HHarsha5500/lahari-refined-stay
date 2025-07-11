@@ -1,44 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Star, Users, Wifi, Car } from 'lucide-react';
+import { BookingForm } from './BookingForm';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Room {
+  id: string;
+  name: string;
+  description: string;
+  base_price: number;
+  max_guests: number;
+  image_url?: string;
+}
 
 const RoomTypes = () => {
-  const rooms = [
-    {
-      id: 1,
-      name: 'Single Room',
-      image: '/lovable-uploads/4e4742d0-f32b-4031-99ed-01c48bf9a73e.png',
-      price: '₹2,000',
-      originalPrice: '₹2,400',
-      rating: 4.8,
-      guests: '1 Guest',
-      features: ['Free Wi-Fi', 'AC', 'TV', 'Room Service'],
-      description: 'Perfect for solo travelers seeking comfort and convenience.',
-    },
-    {
-      id: 2,
-      name: 'Luxury Room',
-      image: '/lovable-uploads/440f2aae-df63-4a72-8504-f9f3d70a4a95.png',
-      price: '₹2,500',
-      originalPrice: '₹3,000',
-      rating: 4.9,
-      guests: '2 Guests',
-      features: ['Free Wi-Fi', 'Premium AC', 'Smart TV', 'Mini Bar', 'Balcony'],
-      description: 'Spacious luxury accommodation with premium amenities and city views.',
-    },
-    {
-      id: 3,
-      name: 'Executive Suite',
-      image: '/lovable-uploads/8864f4e5-1a14-4957-97ce-55d69c203abb.png',
-      price: '₹3,500',
-      originalPrice: '₹4,200',
-      rating: 5.0,
-      guests: '4 Guests',
-      features: ['Free Wi-Fi', 'Living Area', 'Kitchenette', 'Premium Bath', 'Concierge'],
-      description: 'Ultimate luxury suite with separate living area and exclusive services.',
-    },
-  ];
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const { data } = await supabase
+        .from('rooms')
+        .select('*')
+        .eq('is_active', true)
+        .order('base_price', { ascending: true });
+      
+      if (data) {
+        setRooms(data);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
+  const handleBookRoom = (room: Room) => {
+    setSelectedRoom(room);
+    setIsDialogOpen(true);
+  };
 
   return (
     <section id="rooms" className="section-padding bg-gray-50">
@@ -56,65 +57,62 @@ const RoomTypes = () => {
           {rooms.map((room, index) => (
             <Card 
               key={room.id} 
-              className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-in"
+              className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-in border-2 hover:border-primary/50"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               <div className="relative">
                 <img
-                  src={room.image}
+                  src={room.image_url || '/lovable-uploads/4e4742d0-f32b-4031-99ed-01c48bf9a73e.png'}
                   alt={room.name}
                   className="w-full h-64 object-cover"
                 />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 flex items-center space-x-1">
                   <Star className="w-4 h-4 text-gold-500 fill-current" />
-                  <span className="text-sm font-semibold">{room.rating}</span>
+                  <span className="text-sm font-semibold">4.8</span>
                 </div>
               </div>
 
               <CardHeader className="pb-3">
-                <CardTitle className="text-xl font-bold text-navy-800">
-                  {room.name}
+                <CardTitle className="text-xl font-bold text-navy-800 flex items-center justify-between">
+                  <span>{room.name}</span>
+                  <span className="text-primary font-bold">${room.base_price}/night</span>
                 </CardTitle>
                 <p className="text-gray-600 text-sm">{room.description}</p>
               </CardHeader>
 
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <Users className="w-4 h-4" />
-                    <span className="text-sm">{room.guests}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500 line-through">
-                        {room.originalPrice}
-                      </span>
-                      <span className="text-2xl font-bold text-gold-600">
-                        {room.price}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-500">per night</span>
-                  </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Users className="h-4 w-4" />
+                  <span>Up to {room.max_guests} guests</span>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
-                  {room.features.map((feature) => (
-                    <span
-                      key={feature}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-
-                <Button className="w-full bg-gold-500 hover:bg-gold-600 text-white font-semibold py-3 rounded-xl">
+                <Button 
+                  onClick={() => handleBookRoom(room)}
+                  className="w-full bg-gold-500 hover:bg-gold-600 text-white font-semibold py-3 rounded-xl"
+                >
                   Book This Room
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Book {selectedRoom?.name}</DialogTitle>
+            </DialogHeader>
+            {selectedRoom && (
+              <BookingForm
+                roomId={selectedRoom.id}
+                roomName={selectedRoom.name}
+                roomPrice={selectedRoom.base_price}
+                maxGuests={selectedRoom.max_guests}
+                onSuccess={() => setIsDialogOpen(false)}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
