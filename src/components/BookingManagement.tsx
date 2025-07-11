@@ -206,7 +206,7 @@ const BookingManagement = () => {
 
                 <div className="border-t pt-4 flex justify-between items-center">
                   <div>
-                    <p className="text-lg font-semibold">Total: ${booking.total_amount}</p>
+                    <p className="text-lg font-semibold">Total: ₹{booking.total_amount}</p>
                     <p className="text-sm text-muted-foreground">Booking ID: {booking.id.slice(0, 8)}...</p>
                   </div>
                 </div>

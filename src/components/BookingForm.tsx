@@ -144,17 +144,17 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     <div className="space-y-6">
       <div className="bg-card p-6 rounded-lg border">
         <h3 className="text-xl font-semibold mb-2">{roomName}</h3>
-        <p className="text-muted-foreground mb-4">${roomPrice} per night</p>
+        <p className="text-muted-foreground mb-4">₹{roomPrice} per night</p>
         
         {totalPrice > 0 && (
           <div className="bg-muted p-4 rounded-lg">
             <div className="flex justify-between items-center">
               <span>{nights} night{nights > 1 ? 's' : ''}</span>
-              <span>${totalPrice}</span>
+              <span>₹{totalPrice}</span>
             </div>
             <div className="flex justify-between items-center font-semibold pt-2 border-t mt-2">
               <span>Total</span>
-              <span>${totalPrice}</span>
+              <span>₹{totalPrice}</span>
             </div>
           </div>
         )}
@@ -338,7 +338,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 Processing...
               </>
             ) : (
-              `Book Now ${totalPrice > 0 ? `- $${totalPrice}` : ''}`
+              `Book Now ${totalPrice > 0 ? `- ₹${totalPrice}` : ''}`
             )}
           </Button>
         </form>

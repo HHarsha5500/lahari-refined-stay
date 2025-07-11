@@ -202,7 +202,7 @@ const BookingSuccess = () => {
             <div className="border-t pt-4">
               <div className="flex justify-between items-center text-lg font-semibold">
                 <span>Total Amount</span>
-                <span>${booking.total_amount}</span>
+                <span>₹{booking.total_amount}</span>
               </div>
             </div>
           </CardContent>

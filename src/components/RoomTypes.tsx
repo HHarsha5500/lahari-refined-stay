@@ -75,7 +75,7 @@ const RoomTypes = () => {
               <CardHeader className="pb-3">
                 <CardTitle className="text-xl font-bold text-navy-800 flex items-center justify-between">
                   <span>{room.name}</span>
-                  <span className="text-primary font-bold">${room.base_price}/night</span>
+                  <span className="text-primary font-bold">₹{room.base_price}/night</span>
                 </CardTitle>
                 <p className="text-gray-600 text-sm">{room.description}</p>
               </CardHeader>
