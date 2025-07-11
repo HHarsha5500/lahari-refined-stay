@@ -81,6 +81,14 @@ const Navigation = () => {
             
             {user ? (
               <div className="flex items-center space-x-4">
+                <Link 
+                  to="/bookings"
+                  className={`font-medium transition-colors hover:text-gold-500 ${
+                    isScrolled ? 'text-navy-700' : 'text-white'
+                  }`}
+                >
+                  Bookings
+                </Link>
                 <span className={`text-sm ${isScrolled ? 'text-navy-700' : 'text-white'}`}>
                   Welcome, {user.email}
                 </span>
@@ -145,6 +153,13 @@ const Navigation = () => {
               <div className="px-4 space-y-2">
                 {user ? (
                   <>
+                    <Link
+                      to="/bookings"
+                      className="block px-4 py-2 text-navy-700 hover:text-gold-500 font-medium"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Bookings
+                    </Link>
                     <div className="text-sm text-navy-700 mb-2">
                       Welcome, {user.email}
                     </div>
