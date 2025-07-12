@@ -36,6 +36,10 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-scale-in" style={{ animationDelay: '0.5s' }}>
             <Button 
               size="lg" 
+              onClick={() => {
+                const roomsSection = document.getElementById('rooms');
+                roomsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
               className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               Book Now
@@ -43,6 +47,10 @@ const HeroSection = () => {
             <Button 
               size="lg" 
               variant="outline"
+              onClick={() => {
+                const roomsSection = document.getElementById('rooms');
+                roomsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
               className="border-white text-white hover:bg-white hover:text-navy-800 px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
             >
               Explore Rooms

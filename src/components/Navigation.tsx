@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut, UserCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
 
   useEffect(() => {
@@ -80,27 +81,60 @@ const Navigation = () => {
             ))}
             
             {user ? (
-              <div className="flex items-center space-x-4">
-                <Link 
-                  to="/bookings"
-                  className={`font-medium transition-colors hover:text-gold-500 ${
-                    isScrolled ? 'text-navy-700' : 'text-white'
-                  }`}
-                >
-                  Bookings
-                </Link>
-                <span className={`text-sm ${isScrolled ? 'text-navy-700' : 'text-white'}`}>
-                  Welcome, {user.email}
-                </span>
-                <Button 
-                  onClick={signOut}
-                  variant="outline"
+              <div className="relative">
+                <Button
+                  variant="ghost"
                   size="sm"
-                  className="border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-white"
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  className={`p-2 ${isScrolled ? 'text-navy-700 hover:text-gold-500' : 'text-white hover:text-gold-400'}`}
                 >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
+                  <Menu className="w-6 h-6" />
                 </Button>
+                
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 animate-fade-in">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <UserCircle className="w-8 h-8 text-gold-500" />
+                        <div>
+                          <p className="text-sm font-semibold text-navy-800">Welcome!</p>
+                          <p className="text-xs text-gray-600 truncate">{user.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="py-1">
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-4 py-2 text-sm text-navy-700 hover:bg-gray-50 hover:text-gold-500 transition-colors"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      >
+                        <User className="w-4 h-4 mr-3" />
+                        My Profile
+                      </Link>
+                      
+                      <Link
+                        to="/bookings"
+                        className="flex items-center px-4 py-2 text-sm text-navy-700 hover:bg-gray-50 hover:text-gold-500 transition-colors"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      >
+                        <UserCircle className="w-4 h-4 mr-3" />
+                        My Bookings
+                      </Link>
+                      
+                      <button
+                        onClick={() => {
+                          setIsProfileMenuOpen(false);
+                          signOut();
+                        }}
+                        className="flex items-center w-full px-4 py-2 text-sm text-navy-700 hover:bg-gray-50 hover:text-red-500 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 mr-3" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <Link to="/auth">

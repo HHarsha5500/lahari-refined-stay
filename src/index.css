@@ -115,3 +115,8 @@ All colors MUST be HSL.
     @apply max-w-7xl mx-auto;
   }
 }
+
+/* Smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
