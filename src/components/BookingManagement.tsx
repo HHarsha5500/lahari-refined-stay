@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Users, Phone, Mail, Clock } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar, MapPin, Users, Phone, Mail, Clock, Filter, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -27,12 +28,19 @@ interface Booking {
 
 const BookingManagement = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [paymentFilter, setPaymentFilter] = useState<string>('all');
   const { toast } = useToast();
 
   useEffect(() => {
     fetchBookings();
   }, []);
+
+  useEffect(() => {
+    filterBookings();
+  }, [bookings, statusFilter, paymentFilter]);
 
   const fetchBookings = async () => {
     try {
@@ -62,6 +70,73 @@ const BookingManagement = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterBookings = () => {
+    let filtered = [...bookings];
+    
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(booking => booking.booking_status === statusFilter);
+    }
+    
+    if (paymentFilter !== 'all') {
+      filtered = filtered.filter(booking => booking.payment_status === paymentFilter);
+    }
+    
+    setFilteredBookings(filtered);
+  };
+
+  const updateBookingStatus = async (bookingId: string, newStatus: 'pending' | 'confirmed' | 'cancelled' | 'checked_in' | 'checked_out') => {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ booking_status: newStatus })
+        .eq('id', bookingId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Booking status updated successfully.',
+      });
+
+      fetchBookings();
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update booking status.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const exportBookings = () => {
+    const csvData = filteredBookings.map(booking => ({
+      'Booking ID': booking.id,
+      'Guest Name': booking.guest_name,
+      'Guest Email': booking.guest_email,
+      'Room': booking.rooms.name,
+      'Check In': booking.check_in_date,
+      'Check Out': booking.check_out_date,
+      'Guests': booking.num_guests,
+      'Amount': booking.total_amount,
+      'Booking Status': booking.booking_status,
+      'Payment Status': booking.payment_status,
+      'Created': booking.created_at
+    }));
+
+    const csv = [
+      Object.keys(csvData[0]).join(','),
+      ...csvData.map(row => Object.values(row).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bookings-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
   };
 
   const getStatusBadgeVariant = (status: string) => {
@@ -108,15 +183,53 @@ const BookingManagement = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Booking Management</h1>
-        <Button onClick={fetchBookings} variant="outline">
-          Refresh
-        </Button>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-2xl font-bold">Booking Management</h2>
+        <div className="flex flex-wrap gap-2">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="confirmed">Confirmed</SelectItem>
+              <SelectItem value="checked_in">Checked In</SelectItem>
+              <SelectItem value="checked_out">Checked Out</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter by payment" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Payments</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="paid">Paid</SelectItem>
+              <SelectItem value="failed">Failed</SelectItem>
+              <SelectItem value="refunded">Refunded</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button onClick={exportBookings} variant="outline" size="sm">
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+          
+          <Button onClick={fetchBookings} variant="outline" size="sm">
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      {bookings.length === 0 ? (
+      <div className="text-sm text-muted-foreground mb-4">
+        Showing {filteredBookings.length} of {bookings.length} bookings
+      </div>
+
+      {filteredBookings.length === 0 ? (
         <Card>
           <CardContent className="text-center py-8">
             <p className="text-muted-foreground">No bookings found.</p>
@@ -124,7 +237,7 @@ const BookingManagement = () => {
         </Card>
       ) : (
         <div className="space-y-4">
-          {bookings.map((booking) => (
+          {filteredBookings.map((booking) => (
             <Card key={booking.id} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
@@ -208,6 +321,38 @@ const BookingManagement = () => {
                   <div>
                     <p className="text-lg font-semibold">Total: ₹{booking.total_amount}</p>
                     <p className="text-sm text-muted-foreground">Booking ID: {booking.id.slice(0, 8)}...</p>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    {booking.booking_status === 'confirmed' && (
+                      <Button
+                        onClick={() => updateBookingStatus(booking.id, 'checked_in')}
+                        size="sm"
+                        variant="default"
+                      >
+                        Check In
+                      </Button>
+                    )}
+                    
+                    {booking.booking_status === 'checked_in' && (
+                      <Button
+                        onClick={() => updateBookingStatus(booking.id, 'checked_out')}
+                        size="sm"
+                        variant="secondary"
+                      >
+                        Check Out
+                      </Button>
+                    )}
+                    
+                    {['pending', 'confirmed'].includes(booking.booking_status) && (
+                      <Button
+                        onClick={() => updateBookingStatus(booking.id, 'cancelled')}
+                        size="sm"
+                        variant="destructive"
+                      >
+                        Cancel
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>
