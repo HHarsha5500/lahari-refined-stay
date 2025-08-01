@@ -1,6 +1,5 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, Mail, Lock, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -21,9 +21,32 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { signIn } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Check if user is already logged in and is admin
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('preferences')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (profileData?.preferences && typeof profileData.preferences === 'object') {
+          const preferences = profileData.preferences as any;
+          if (preferences.role === 'admin') {
+            navigate("/admin-dashboard");
+          }
+        }
+      }
+    };
+
+    checkAdminStatus();
+  }, [navigate]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,15 +70,43 @@ const AdminLogin = () => {
 
     setIsLoading(true);
     try {
-      const { error } = await signIn(email, password);
-      if (error) {
-        setErrors({ general: "Invalid email or password" });
+      // Sign in with Supabase
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setErrors({ general: signInError.message });
         toast({
           title: "Login Failed",
           description: "Please check your credentials and try again.",
           variant: "destructive",
         });
-      } else {
+        return;
+      }
+
+      if (data.user) {
+        // Check if user is admin
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('preferences')
+          .eq('user_id', data.user.id)
+          .single();
+
+        if (profileError || !profileData?.preferences || typeof profileData.preferences !== 'object') {
+          await supabase.auth.signOut();
+          setErrors({ general: "Access denied. Admin privileges required." });
+          return;
+        }
+
+        const preferences = profileData.preferences as any;
+        if (!preferences.role || preferences.role !== 'admin') {
+          await supabase.auth.signOut();
+          setErrors({ general: "Access denied. Admin privileges required." });
+          return;
+        }
+
         toast({
           title: "Login Successful",
           description: "Welcome to the Hotel Management Dashboard!",
@@ -91,18 +142,33 @@ const AdminLogin = () => {
     setIsLoading(true);
     try {
       // First verify old password by attempting login
-      const { error: loginError } = await signIn(resetEmail, oldPassword);
-      if (loginError) {
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: resetEmail,
+        password: oldPassword,
+      });
+
+      if (signInError) {
         setErrors({ oldPassword: "Current password is incorrect" });
         setIsLoading(false);
         return;
       }
 
-      // In a real implementation, you would call a password update function here
-      // For now, we'll show a success message
+      // Update password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (updateError) {
+        setErrors({ general: updateError.message });
+        return;
+      }
+
+      // Sign out after successful password change
+      await supabase.auth.signOut();
+      
       toast({
         title: "Password Reset Successful",
-        description: "Your password has been updated successfully.",
+        description: "Your password has been updated successfully. Please log in with your new password.",
       });
       
       setShowResetForm(false);
