@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Star, Users, Wifi, Car } from 'lucide-react';
 import { BookingForm } from './BookingForm';
+import { RoomAvailabilityCalendar } from './RoomAvailabilityCalendar';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Room {
@@ -84,6 +85,11 @@ const RoomTypes = () => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Users className="h-4 w-4" />
                   <span>Up to {room.max_guests} guests</span>
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-muted-foreground">Availability</span>
+                  <RoomAvailabilityCalendar roomId={room.id} compact />
                 </div>
 
                 <Button 
