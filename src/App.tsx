@@ -13,6 +13,7 @@ import Gallery from "./pages/Gallery";
 import BookingSuccess from "./pages/BookingSuccess";
 import Bookings from "./pages/Bookings";
 import Profile from "./pages/Profile";
+import RoomDetails from "./pages/RoomDetails";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/room/:roomId" element={<RoomDetails />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

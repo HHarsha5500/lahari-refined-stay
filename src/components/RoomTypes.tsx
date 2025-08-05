@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Star, Users, Wifi, Car } from 'lucide-react';
+import { Star, Users, Eye } from 'lucide-react';
 import { BookingForm } from './BookingForm';
 import { RoomAvailabilityCalendar } from './RoomAvailabilityCalendar';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 interface Room {
   id: string;
   name: string;
@@ -18,6 +19,7 @@ const RoomTypes = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchRooms = async () => {
       const {
@@ -74,9 +76,22 @@ const RoomTypes = () => {
 
                 
 
-                <Button onClick={() => handleBookRoom(room)} className="w-full bg-gold-500 hover:bg-gold-600 text-white font-semibold py-3 rounded-xl">
-                  Book This Room
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => navigate(`/room/${room.id}`)} 
+                    variant="outline" 
+                    className="flex-1"
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Details
+                  </Button>
+                  <Button 
+                    onClick={() => handleBookRoom(room)} 
+                    className="flex-1 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-xl"
+                  >
+                    Book Now
+                  </Button>
+                </div>
               </CardContent>
             </Card>)}
         </div>
