@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Star, Users, Eye } from 'lucide-react';
+import { Star, Users, Eye, Filter } from 'lucide-react';
 import { BookingForm } from './BookingForm';
+import EnhancedBookingForm from './EnhancedBookingForm';
+import RoomSearchFilters from './RoomSearchFilters';
 import { RoomAvailabilityCalendar } from './RoomAvailabilityCalendar';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { useRoomSearch } from '@/hooks/useRoomSearch';
 interface Room {
   id: string;
   name: string;
@@ -16,38 +19,95 @@ interface Room {
   image_url?: string;
 }
 const RoomTypes = () => {
-  const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchRooms = async () => {
-      const {
-        data
-      } = await supabase.from('rooms').select('*').eq('is_active', true).order('base_price', {
-        ascending: true
-      });
-      if (data) {
-        setRooms(data);
-      }
-    };
-    fetchRooms();
-  }, []);
+  
+  // Use the custom hook for search and filtering
+  const { 
+    rooms, 
+    loading, 
+    filters, 
+    updateFilters, 
+    clearFilters 
+  } = useRoomSearch();
   const handleBookRoom = (room: Room) => {
     setSelectedRoom(room);
     setIsDialogOpen(true);
   };
+
+  const hasActiveFilters = filters.checkIn || filters.checkOut || 
+    filters.guests > 1 || filters.minPrice > 0 || filters.maxPrice < 15000 || 
+    filters.amenities.length > 0;
   return <section id="rooms" className="section-padding bg-gray-50">
       <div className="container-custom">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold text-navy-800 mb-4">
             Luxury Accommodations
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
             Unwind in comfort. Choose your perfect stay from our collection of elegantly designed rooms and suites.
           </p>
+          
+          <div className="flex justify-center gap-4">
+            <Button 
+              variant={showFilters ? "default" : "outline"}
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              {showFilters ? 'Hide Filters' : 'Show Filters'}
+              {hasActiveFilters && (
+                <span className="bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                  !
+                </span>
+              )}
+            </Button>
+          </div>
         </div>
 
+        {/* Search & Filters */}
+        {showFilters && (
+          <div className="mb-8 animate-fade-in">
+            <RoomSearchFilters
+              filters={filters}
+              onFiltersChange={updateFilters}
+              onClearFilters={clearFilters}
+              loading={loading}
+            />
+          </div>
+        )}
+
+        {/* Results Summary */}
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-gray-600">
+            {loading ? 'Searching...' : `${rooms.length} room${rooms.length !== 1 ? 's' : ''} available`}
+          </p>
+          {hasActiveFilters && (
+            <Button variant="ghost" onClick={clearFilters}>
+              Clear all filters
+            </Button>
+          )}
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        )}
+
+        {/* No Results */}
+        {!loading && rooms.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">No rooms found</h3>
+            <p className="text-gray-600 mb-4">Try adjusting your search criteria</p>
+            <Button onClick={clearFilters}>Clear filters</Button>
+          </div>
+        )}
+
+        {/* Rooms Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {rooms.map((room, index) => <Card key={room.id} className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-in border-2 hover:border-primary/50" style={{
           animationDelay: `${index * 0.2}s`
@@ -97,11 +157,19 @@ const RoomTypes = () => {
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Book {selectedRoom?.name}</DialogTitle>
             </DialogHeader>
-            {selectedRoom && <BookingForm roomId={selectedRoom.id} roomName={selectedRoom.name} roomPrice={selectedRoom.base_price} maxGuests={selectedRoom.max_guests} onSuccess={() => setIsDialogOpen(false)} />}
+            {selectedRoom && (
+              <EnhancedBookingForm 
+                roomId={selectedRoom.id}
+                roomName={selectedRoom.name}
+                roomPrice={selectedRoom.base_price}
+                maxGuests={selectedRoom.max_guests}
+                onSuccess={() => setIsDialogOpen(false)}
+              />
+            )}
           </DialogContent>
         </Dialog>
       </div>
