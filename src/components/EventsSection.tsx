@@ -65,7 +65,16 @@ const EventsSection = () => {
           {eventTypes.map((type) => (
             <TabsContent key={type.id} value={type.id} className="animate-fade-in">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className="space-y-6">
+                <div className="relative order-2 lg:order-2">
+                  <img
+                    src={type.image}
+                    alt={`${type.title} venue`}
+                    className="w-full h-96 object-cover rounded-2xl shadow-2xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                </div>
+
+                <div className="space-y-6 order-1 lg:order-1">
                   <div>
                     <h3 className="text-3xl font-bold text-navy-800 mb-4">
                       {type.title}
@@ -113,15 +122,6 @@ const EventsSection = () => {
                       Download Brochure
                     </Button>
                   </div>
-                </div>
-
-                <div className="relative">
-                  <img
-                    src={type.image}
-                    alt={`${type.title} venue`}
-                    className="w-full h-96 object-cover rounded-2xl shadow-2xl"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
                 </div>
               </div>
             </TabsContent>
