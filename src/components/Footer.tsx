@@ -47,26 +47,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <div className="space-y-2">
-              <Link to="/#home" className="block text-gray-300 hover:text-gold-400 transition-colors">
-                Home
-              </Link>
-              <Link to="/#rooms" className="block text-gray-300 hover:text-gold-400 transition-colors">
-                Rooms
-              </Link>
-              <Link to="/#dining" className="block text-gray-300 hover:text-gold-400 transition-colors">
-                Dining
-              </Link>
-              <Link to="/#events" className="block text-gray-300 hover:text-gold-400 transition-colors">
-                Events
-              </Link>
-              <Link to="/privacy-policy" className="block text-gray-300 hover:text-gold-400 transition-colors">
-                Privacy Policy
-              </Link>
-            </div>
-          </div>
+          
         </div>
 
         <div className="border-t border-gray-700 mt-12 pt-8">
