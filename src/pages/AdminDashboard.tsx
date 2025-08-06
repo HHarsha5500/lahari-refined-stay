@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, BarChart3, Bed, Calendar } from "lucide-react";
+import { LogOut, BarChart3, Bed, Calendar, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import DashboardStats from "@/components/DashboardStats";
 import BookingManagement from "@/components/BookingManagement";
 import RoomStatus from "@/components/RoomStatus";
+import MessagesManagement from "@/components/MessagesManagement";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -104,7 +105,7 @@ const AdminDashboard = () => {
 
         {/* Management Tabs */}
         <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="bookings" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Bookings
@@ -112,6 +113,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="rooms" className="flex items-center gap-2">
               <Bed className="h-4 w-4" />
               Rooms
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              Messages
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
@@ -125,6 +130,10 @@ const AdminDashboard = () => {
 
           <TabsContent value="rooms" className="space-y-6">
             <RoomStatus />
+          </TabsContent>
+
+          <TabsContent value="messages" className="space-y-6">
+            <MessagesManagement />
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">

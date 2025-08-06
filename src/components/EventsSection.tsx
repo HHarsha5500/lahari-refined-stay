@@ -4,8 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Users, Calendar, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const EventsSection = () => {
+  const navigate = useNavigate();
+  
   const eventTypes = [
     {
       id: 'weddings',
@@ -96,10 +99,14 @@ const EventsSection = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Button className="bg-gold-500 hover:bg-gold-600 text-white font-semibold px-8 py-3 rounded-xl">
+                    <Button 
+                      onClick={() => navigate('/contact')}
+                      className="bg-gold-500 hover:bg-gold-600 text-white font-semibold px-8 py-3 rounded-xl"
+                    >
                       Book an Event
                     </Button>
                     <Button 
+                      onClick={() => navigate('/contact')}
                       variant="outline" 
                       className="border-navy-500 text-navy-600 hover:bg-navy-50 font-semibold px-8 py-3 rounded-xl"
                     >
@@ -134,7 +141,10 @@ const EventsSection = () => {
                 Our experienced event coordinators will help you plan every detail to perfection. 
                 From venue selection to catering, decoration, and entertainment - we handle it all.
               </p>
-              <Button className="bg-navy-800 hover:bg-navy-700 text-white font-semibold px-8 py-3 rounded-xl">
+              <Button 
+                onClick={() => navigate('/contact')}
+                className="bg-navy-800 hover:bg-navy-700 text-white font-semibold px-8 py-3 rounded-xl"
+              >
                 Schedule a Consultation
               </Button>
             </CardContent>
